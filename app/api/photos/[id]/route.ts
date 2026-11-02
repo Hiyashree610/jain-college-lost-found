@@ -1,0 +1,2 @@
+import {env} from 'cloudflare:workers';
+export async function GET(request:Request,{params}:{params:Promise<{id:string}>}){const {id}=await params;if(!/^[a-f0-9-]{36}$/.test(id))return new Response('Not found',{status:404});const o=await env.BUCKET!.get(id);if(!o)return new Response('Not found',{status:404});return new Response(o.body,{headers:{'Content-Type':o.httpMetadata?.contentType||'image/jpeg','Cache-Control':'public, max-age=3600','X-Content-Type-Options':'nosniff'}})}
